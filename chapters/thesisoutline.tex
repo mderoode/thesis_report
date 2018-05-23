@@ -1,0 +1,140 @@
+This chapter elaborates on the previous chapter by describing relevant resource related problems, thus aiming to answer research question RQ2 and furthermore acting as a framework to structure the thesis. 
+
+This chapter defines several sub-questions which each describe different relations between resources and cases. For each of the sub-questions, the goal is defined and the general problem is explained. Next, the evaluation for each sub-question is discussed and the high-level overview of possible techniques is given. 
+
+
+The first sub-question aims to abstract from single resources by grouping them in roles. The next question focusses on finding resource and role bottlenecks which can be identified by studying their behaviour. Next, it is possible to analyse the common behaviour of the resources and roles by finding work-allocation patterns. These patterns can then be used to identify the deviating cases and hence it can be analysed whether the deviations have something in common using a root-cause analysis. Finally, it is important to take into account situations where insufficient information is available to perform the analysis.
+ \todo{Add research questions about how to present the results to users in a intuitive way}
+
+\section{Role Mining}
+The goal of Role Mining is to identify the roles of resources based on event data. The resource roles can be used to abstract from individual resources because an event log can contain hundreds of resources and analyzing all resources on an individual level might not be feasible. A logical method for grouping resources are roles because many organization use roles to determine resource rights (see section \ref{section:rolemining}). 
+
+This problem is different from the traditional role mining algorithms as described in section \ref{section:rolemining} because the input is now an event log instead of a set of permissions. In this setting, the exact permissions of roles are not of interest but rather the behaviour of the resources are of interests. The reason for this is because the roles are in this context not used for defining an access policy, but rather for analyzing the resource behaviour. The role mining should. therefore, identify roles based on the resource behaviour. Resource question RQ3.1 describes the identification of resource roles and  RQ3.2 elaborates on the identified roles by analyzing role behaviour. 
+
+\begin{enumerate}
+	\item[\textbf{RQ3.1}] Can roles be re-identified from event logs?
+    \item[\textbf{RQ3.2}] Which activities are performed by which roles?
+\end{enumerate}
+
+\subsection{Evaluation}\label{section:role_mining_evaluation}
+The output of the Role Mining is the identified roles for each resource. These results are evaluated using several methods. First of all, it is possible to simulate a synthetic process by using, for example, CPN Tools and define several resource roles which are each able to perform a set of activities. The process simulation tool should generate several event logs with various amounts of process instances (e.g. 100, 1,000, 10,000 and 100,000) which are loaded into the role mining algorithm. The results of the role mining can then be compared with the process definition. Furthermore, the event logs can be altered with certain noise levels (i.e. swap a certain percentage of a resource of an activity for another resource) and the results can again be compared in order to see how the algorithm performs in a more real-life setting. 
+
+Furthermore, a more realistic setting would be to evaluate the clustering on a real-life log where the roles are known. Moreover, the clustering should be showcased on other real logs and, if available, the results can be discussed with a domain expert. 
+
+\subsection{Technique}
+Role Mining can be defined as an unsupervised machine learning problem because the roles should be predicted without the availability of a train set with 'true'-labels. More specifically, the problem relates to unsupervised clustering because the resources are clustered into roles. However, traditional clustering aims to find only a single cluster for each data point and can therefore not be used for this purpose because resources can have multiple roles. In the context of traditional clustering, a cluster would be a role or a set of roles and thus makes the results hard to interpret.
+
+Furthermore, hierarchical clustering might be used because it generates hierarchical clusters, where each parent-cluster could mean that a resource contains the roles of the child-clusters. It is, however, challenging to find the right amount of cluster granularity when using hierarchical clustering and the hierarchy does not evaluate all role combination. Additionally, another clustering approach is Fuzzy Clustering which uses Fuzzy Logic. Each element is related to all clusters with a certain weight factor and can thus be part of multiple roles. This seems more suitable for role mining. The main challenge is to find the most optimal weight-threshold to convert the Fuzzy logic to role relationship logic. \todo{What about weighted graph clustering?}
+
+By defining Role Mining as a clustering problem, it is possible to use the clustering metrics to evaluate the model. Examples of  unsupervised clustering metrics are: Root-mean-square standard deviation (RMSSTD) index, silhouette index, Davies-Bouldin, Calinski-Harabasz,Dunn index, R-squared index, Hubert-Levin (C-index), Krzanowski-Lai index, Hartigan index, Semi-partial R-squared (SPR) index, Distance between two clusters (CD) index, weighted inter-intra index, Homogeneity index and Separation index. A set of these metrics can be used to evaluate and compare the clustering models. Furthermore, another evaluation method is to divide the event log into a training and validation set to perform a cross-validation. 
+
+% \noindent
+% The evaluation is key for role mining, especially because role mining can be defined as an unsupervised learning problem and thus evaluation of the results is rather challenging. 
+
+% \todo{Is there any other evaluation method which might be more meaningful for end-users?}
+
+% Additionally, a more practical approach would be to test the clustering on a synthetic process log which is engineered in such a way that certain clusters are contained in the log. It is then possible to check whether the clustering approach can identify the clusters. 
+
+% Finally, it is important to visualize the results. A visualization method is to plot the social graph by cluster. An extension would be to take into account the control-flow of cases, and to let the cases \textit{flow} between clusters.
+
+
+\section{Bottlenecks}
+The goal of the bottlenecks questions is to identify bottlenecks, analyse whether it changes over time and to find the root-cause of bottlenecks. Furthermore, this section elaborates on Role Mining because it uses the identified roles as input for the analysis. Moreover, the bottlenecks analysis elaborates on the general statistics of resources and resources as queues literature of section \ref{section:generalstatistics} and \ref{section:queues} because it builds on top of these methods.
+
+In order to identify bottlenecks, it is essential to first estimate the utilization rate of resources (RQ4.1) because the utilization rate can be used to determine bottlenecks. Next, it is interesting to see whether there are any changes of the utilization over time, and what causes these changes (RQ4.2 and RQ4.2.1). Finally, it is key to identify the bottlenecks because the throughput of a process is limited by its bottlenecks (RQ4.3) and to find its root-causes (RQ4.3.1). 
+
+\begin{enumerate}
+\item[\textbf{RQ4.1}] How do we estimate the utilization of resources and roles?
+\item[\textbf{RQ4.2}] Are there any significant changes in utilization of resources/roles?
+  \begin{enumerate}
+  \item[\textbf{RQ4.2.1}] If so, are there any predictors for the change? 
+  \end{enumerate}
+\item[\textbf{RQ4.3}] Which resources or roles act as a bottleneck in the process? 
+  \begin{enumerate}
+  \item[\textbf{RQ4.3.1}] If so, is it possible to find its root cause? \todo{remove this question? It is hard to validate. The output of 4.3 can be used as input for a root-cause analysis.}
+  \end{enumerate}
+\end{enumerate}
+
+\subsection{Evaluation}
+The output of RQ4.1 is a utilization rate for each resource on all points in time. In order to validate these utilization rates, a synthetic process can be simulated, similarly to the evaluation described in section \ref{section:role_mining_evaluation}. The simulation tool should output both an event log and the utilization rate of each resource over time. The event log can then act as input for the developed algorithm and the output can be compared with the output of the simulation tool. 
+
+RQ4.2 aims to find changes in utilization rate, which can be validated similarly as RQ4.1 by building in certain change points in the synthetic process. Additionally, the change detection can be tested on real data where it is known that there is a process drift at a given point in time. Furthermore, for the purpose of evaluating RQ4.2.1, certain attributes can be injected into the process which are predictive of changes. 
+
+Finally, RQ4.3 requires certain resources/roles which are a bottleneck in the process. Again, the simulated process model can incorporate this by creating a situation where the utilization rate of certain resources/roles is higher than one. The results of the bottleneck identification can then be compared with the actual bottlenecks. \todo{Remove 4.3.1 or add evaluation}
+
+\subsection{Techniques}
+Finding the utilization rate is dependent on two resource-independent attributes, namely: workload and availability. The utilization rate can be defined as the time that a resource is effectively working with respect to its availability. The time that a resource is working can be derived from an event log. The availability of resources, on the other hand, cannot directly be derived from the event log. It can be estimated from historical data how much time per period (e.g. week) a resource is available. This can then be used in combination with the workload to determine the utilization rate. The utilization rate identification is again an unsupervised learning problem. However, additional input can be given when the availability of resources is known. When this is not the case, the algorithm should estimate the availability. 
+
+RQ4.2 aims at finding significant changes in a variable and can thus be defined as an unsupervised trend detection problem. An approach can be to detect trends in the data and see whether there are any significant changes in these trends over time. When there are significant trends in the data, RQ4.2.1 aims to find any predictors for the trends which can be approached by performing a regression analysis between case and event attributes against the trends. 
+
+Finally, RQ4.3 aims to find which resources are the bottlenecks of the process and can thus also be defined as an unsupervised problem. The bottlenecks can be found because they limit the process throughput, i.e. the throughput of the bottlenecks is approximately equal to the complete process throughput. Furthermore, the throughput rate of the resources approach one, hence the workload keeps increasing over time. \todo{Remove 4.3.1 or add techniques}
+
+
+% \noindent
+% Question 4.1 can be validated by simulating a synthetic process and calculating the utilization rates of the resources at all times. This can then be compared to the chosen approach. Furthermore, many approaches to measure utilization of resources already exists in literature. Using an already proven metric can also contribute to the quality of the end-result. Question 4.2 can similarly be checked by simulating a synthetic process which contains changes in utilization rate over time. The predictors (Question 4.2.1) can again be evaluated using correlation errors. Finally, Question 4.3 can be evaluated in the same manner, but can also be evaluated by using real datasets where there is a known bottleneck. Additionally, the former results can also be showcased on real datasets. 
+
+% Lastly, the visualization of the utilization rates can be projected on both the control-flow and the social graph. Furthermore, the changes in utilization rate can be plotted over time. 
+
+
+\section{Work-allocation patterns}
+The goal of the work-allocation patterns questions is to identify patterns in how tasks are allocated to resources as is shown in \ref{section:introduction_resource_perspective}. These work-allocation rules can be seen as more detailed patterns than the resource roles, which tend to focus on high-level inter-resource patterns, while work-allocation rules can be defined on individual resource level and even take into account other process perspectives. The questions in this section aim to create a general model of the current state-of-the-art techniques, which is presented in section \ref{section:allocation} and \ref{section:prioritization}. Furthermore, it extends the work by using the patterns as input for a root-cause analysis.
+
+Research question RQ5.1 aims to find a set of work-allocation rules such as: \textbf{(a)} If multiple tasks are available, does a resource/role prefer a certain task?, \textbf{(b)} If there are multiple resources or roles are available for a certain task, is a certain resource/role picked more often? and \textbf{(c)} Which resource prioritization policies does a resource/role follow? RQ5.2 elaborates on RQ5.1 by analyzing whether there are any predictors for when certain work-allocation patterns are followed. \todo{What is the difference with deviations?}
+
+\begin{enumerate}
+\item[\textbf{RQ5.1}] Is it possible to detect work-allocation rules?
+\item[\textbf{RQ5.2}] Do there exist any event or case attributes which can act as predictors for the work-allocation rules? 
+\end{enumerate}
+
+\subsection{Evaluation}
+The output of RQ5.1 is a set of which resource patterns occur over time for certain resources or roles. The identified patterns can be validated by replaying the original event log and measuring how well the patterns describe the event log. Using this approach, the exact fitness, precision and generalization of the patterns can be calculated, which are defined as:
+
+\begin{itemize}
+\item \textbf{Fitness:} number of times which the pattern hold
+\item \textbf{Precision:} number of times which the rule describes behaviour which does not occur in the event log
+\item \textbf{Generalization:} relative score of how abstract the rule is 
+\end{itemize}
+
+The latter is important because a more high-level rule might be more useful as very detailed small rules. Note that a too general rule is penalized by the precision metric. Furthermore, it is again possible to evaluate the patterns on a synthetic process which is engineered to contain certain patterns. Moreover, it is possible to showcase the performance of the algorithm on real datasets. Finally, it is possible to compare the results with current approaches. 
+
+Research question RQ5.2 outputs correlation factor for each attribute and can be evaluated by a different method, namely by using the correlation error of the event and case attributes. Furthermore, the correlation can be tested on a synthetic process and also public datasets. The findings of the latter can be confirmed by a domain expert. 
+
+% Finally, there are various methods of visualizing the results, e.g.: highlighting the control-flow process model or social graph with the identified patterns. Moreover, the predictive capacity of the case attributes can be visualized for each work-allocation rule. 
+
+\subsection{Techniques}
+Because there are many different patterns, and some are better followed than others, RQ5.1 can be defined as an unsupervised ranking problem which aims to rank the work-allocation patterns on their relevancy or penalty. The problem is unsupervised because there is no training set available for the model to learn. In order to identify the patterns, an overall pattern model should be developed which can describe all patterns. Each pattern should then be defined in terms of this model and the event log should be mapped to the defined patterns. A way to approach this is to calculate alignments between the event log and patterns and then determine the evaluation metrics based on this alignment.  
+
+Furthermore, RQ5.2 can be defined as a correlation problem, where each pattern can be correlated with all case and event attributes. These attributes might be able to predict which pattern is used. 
+
+
+\section{Deviations}
+The goal of the deviation questions is to identify when and why the work-allocation patterns and roles do not hold and thus elaborates on the previous two sections and the state-of-the-art techniques described in section \ref{section:allocation} and \ref{section:prioritization}. RQ6.1 aims to group deviations because just as with resources, it helps to abstract from individual deviations by grouping them. Furthermore, RQ6.2 aims to discover if there is a (set of) case and event attributes which can predict when deviations occur. The outcome of this question can be used for a 'root-cause analysis'.
+
+\begin{enumerate}
+\item[\textbf{RQ6.1}] Is it possible to group deviations from work-allocation rules? 
+\item[\textbf{RQ6.2}] Are there any case attributes which can act as predictors for the deviations? 
+\end{enumerate}
+
+\subsection{Evaluation}
+The output of RQ6.1 is grouped deviations. This can again be validated by extending the synthetic process model such that there are different reasons for a case to deviate from normal process execution. This process can be simulated and the event log can act as input for this algorithm. The identified grouped deviations can be compared to the actual deviation types. 
+
+Research question RQ6.2 outputs correlation factor for each attribute and can be evaluated by a different method, namely by using the correlation error of the event and case attributes.
+
+\subsection{Techniques}
+Research Question RQ6.1 can be identified as an unsupervised clustering problem because it tries to cluster deviations into groups without learning from a training set. Because each deviation should be in exactly a single cluster, traditional cluster techniques can be used.  
+
+Furthermore, R6.2 can be described as a correlation problem, where each deviation can be correlated with all case and event attributes. 
+
+
+\section{Activity Life-cycle Transition}
+The goal of the activity life-cycle transition question is to describe what to do when essential information, i.e. the start dates of events, is missing from the event log. All other components, except the role mining, are built on the assumption that this data is available. However, this is not the case in all situations and therefore it is essential to describe what to do when this information is unavailable. However, the current state-of-the-art research presented in section \ref{section:resourceperspective} does not take this issue into account. The final research question, RQ6, aims to find a solution for such a situation. 
+
+\begin{enumerate}
+\item[\textbf{RQ6}] What to do when no start activity life-cycle transitions are available?
+\end{enumerate}
+
+\subsection{Evaluation}
+The result of activity life-cycle transition events is a start activity life-cycle transition for each event which does not have this information. An evaluation method is to strip the start activity information from a log and to estimate it. The average error between the estimations and the original data can be used to evaluate and compare different approaches. 
+
+\subsection{Techniques}
+The activity life-cycle transition question has to create information which is not available and can, therefore, be seen as an unsupervised prediction problem. Instead of just predicting the data, it is also possible to apply heuristics and use external data sources in order to estimate the start activity life-cycle transitions. 

@@ -1,0 +1,162 @@
+%
+% TU/e Style Master Thesis template for LaTeX
+%
+% Public version 1.0
+% 2010 - 2013 Thijs Nugteren and Joos Buijs
+%
+% THIS IS THE MAIN FILE (i.e. compile this file, compiling the others directly won't work)
+%
+
+\documentclass[a4paper,10pt,twoside]{report}
+
+%all the other includes etc. are done in the thesis.sty file.
+\usepackage{thesis}
+
+%
+% These commands need to be defined in order to produce a correct and personalized document
+%
+\newcommand{\shortdoctitle}{Master's Thesis}
+\newcommand{\doctitle}{Inter-case Resource Dependencies}
+\newcommand{\docsubtitle}{Master Thesis}
+
+\newcommand{\me}{M.A.W. de Roode, BSc}
+\newcommand{\keywords}{resource, inter-case, dependency}
+\newcommand{\version}{version 1.1}
+\newcommand{\monthYear}{July (2018)}
+
+%Be sure to use all the titles for your committee members!!! (their names show up on the very first page!)
+\newcommand{\firstCommitteeMember}{prof. dr. ir. D. Fahland}
+\newcommand{\secondCommitteeMember}{}
+\newcommand{\thirdCommitteeMember}{}
+
+\author{\me}
+
+%
+% PDF settings
+%
+\hypersetup
+{
+    pdfauthor={\me},
+    pdftitle={\shortdoctitle},
+    pdfsubject={\doctitle},
+    pdfkeywords={\keywords}
+}
+
+\begin{document}
+
+%use this include for PDF and distribution versions
+\pagenumbering{roman}
+\include{titlepage}
+
+\normalsize
+
+\clearemptydoublepage
+
+%Sometimes line numbers are nice, uncomment the next line to enable:
+%\linenumbers
+
+%It could be handy to have a list of todos and brainstorms in your thesis
+%\chapter*{*General todos*}\todo{remove this chapter}
+%\input{chapters/general_todos}
+
+%\chapter*{*Brainstorm results*}\todo{remove this chapter}
+%\input{chapters/brainstorm_results}
+
+\chapter*{Abstract}\label{chapter:abstract}
+\input{chapters/abstract}
+
+\clearemptydoublepage
+
+%An executive summary if you want:
+%\chapter*{Executive summary}\label{chapter:executive_summary}
+%\input{chapters/executive_summary}
+
+%\clearemptydoublepage
+
+
+% \chapter*{Preface}\label{chapter:preface}
+% \input{chapters/preface}
+
+\clearemptydoublepage
+
+\tableofcontents
+
+\clearemptydoublepage
+
+\listoffigures
+
+\clearemptydoublepage
+
+\listoftables
+
+\clearemptydoublepage
+
+\lstlistoflistings
+
+\clearemptydoublepage
+
+\chapter{Introduction}\label{chapter:introduction}
+\setcounter{page}{0}
+\pagenumbering{arabic}
+%from here on, start the 'real' page numbering, from 1, with normal digits
+\input{chapters/introduction}
+
+\clearemptydoublepage
+
+% \chapter{Preliminaries}\label{chapter:preliminaries}
+% \input{chapters/preliminaries}
+
+\clearemptydoublepage
+
+\chapter{Background Information}\label{chapter:background}
+\input{chapters/background}
+
+\clearemptydoublepage
+
+
+\chapter{Research Problem Definition}\label{chapter:thesisoutline}
+\input{chapters/thesisoutline}
+
+\clearemptydoublepage
+
+\chapter{Framework}\label{chapter:framework}
+\input{chapters/framework}
+
+\clearemptydoublepage
+
+% \chapter{Visualization definition}\label{chapter:visdef}
+% \input{chapters/visdef}
+
+\chapter{Implementation}\label{chapter:implementation}
+\input{chapters/implementation}
+
+\clearemptydoublepage
+
+\chapter{Evaluation}\label{chapter:evaluation}
+\input{chapters/evaluation}
+
+\clearemptydoublepage
+
+% \chapter*{Inter-case resource pattern}\label{chapter:case_studies}
+% \input{chapters/case_studies}
+
+\clearemptydoublepage
+
+\chapter{Conclusions}\label{chapter:conclusions}
+\input{chapters/conclusions}
+
+\clearemptydoublepage
+
+%Choose a good bibliography style, plain would do often, but these might be nice too
+%\bibliographystyle{these}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\clearemptydoublepage
+
+\appendix
+\addcontentsline{toc}{chapter}{Appendix}
+
+\input{appendices/main}
+
+\end{document}
